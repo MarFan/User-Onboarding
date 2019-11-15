@@ -1,0 +1,95 @@
+// return (
+    //     <Container>
+    //         <Row>
+    //             <Col xs="12" sm="4">
+    //                 <Form>
+    //                     <FormGroup>
+    //                         <Label htmlFor="nameInput">Your Name</Label>
+    //                         <Field id="nameInput" name="name" type="text" placeholder="Your Name" />
+    //                         {touched.name && errors.name ? <small id="" className="form-text text-danger">{errors.name}</small> : null}
+    //                     </FormGroup>
+    //                     <FormGroup>
+    //                         <Label htmlFor="emailInput">Email Address</Label>
+    //                         <Field id="emailInput" name="email" type="text" placeholder="Your Email Address" />
+    //                         {touched.email && errors.email ? <small id="" className="form-text text-danger">{errors.email}</small> : null}
+    //                     </FormGroup>
+    //                     <FormGroup>
+    //                         <Label htmlFor="passwordInput">Password</Label>
+    //                         <Field id="passwordInput" name="password" type="password" placeholder="Create a Password" />
+    //                         {touched.password && errors.password ? <small id="" className="form-text text-danger">{errors.password}</small> : null}
+    //                     </FormGroup>
+    //                     <FormGroup>
+    //                         <Label htmlFor="password2Input">Re-Password</Label>
+    //                         <Field id="password2Input" name="password2" type="password" placeholder="Verify Password" />
+    //                         {touched.password2 && errors.password2 ? <small id="" className="form-text text-danger">{errors.password2}</small> : null}
+    //                     </FormGroup>
+    //                     <FormGroup check>
+    //                         <Label check>
+    //                             <Field id="tosInput" name="tos" type="checkbox" />
+    //                             I agree
+    //                             {errors.tos ? <small id="" className="form-text text-danger">{errors.tos}</small> : null}
+    //                         </Label>
+    //                     </FormGroup>
+    //                     <Row className="justify-content-end">
+    //                         <Button color="primary" type="submit">Submit</Button>
+    //                     </Row>
+    //                 </Form>
+    //             </Col>
+    //         </Row>
+    //     </Container>
+    //)
+
+    // const formik = useFormik({
+    //     initialValues: {name: "", email: "", password: "", password2: ""},
+    //     validationSchema: Yup.object({
+    //         name: Yup.string()
+    //             .required('Please, Sir. What is your name?'),
+    //         email: Yup.string()
+    //             .email()
+    //             .required('We promise not to spam you.'),
+    //         password: Yup.string()
+    //             .min(8, 'Must be atleast 8 characters')
+    //             .required('No password?  You need that.'),
+    //         password2: Yup.string()
+    //             .min(8, 'Must be atleast 8 characters')
+    //             .required('Something is up with your passwords. Try again!'),
+    //         tos: Yup.bool().oneOf([true], 'Not so fast!')
+    //     }),
+    //     handleSubmit: (values, { setStatus }) => {
+    //         // post data
+    //         axios.post('https://reqres.in/api/users', values)
+    //             .then(res => {
+    //                 setStatus(res.data)
+    //             })
+    //             .catch(err => console.log(`Error: ${err.response}`));
+    //     }
+    // });
+
+
+
+    const FormikUserForm = withFormik({
+    mapPropsToValues({ name, email, password, password2, tos }) {
+        return {
+            name: name || "",
+            email: email || "",
+            password: password || "",
+            password2: password2 || "",
+            tos: tos || false
+        };
+    },
+    validationSchema: Yup.object().shape({
+        name: Yup.string().required('Please, Sir. What is your name?'),
+        email: Yup.string().email().required('We promise not to spam you.'),
+        password: Yup.string().min(8, 'Must be atleast 8 characters').required('No password?  You need that.'),
+        password2: Yup.string().min(8, 'Must be atleast 8 characters').required('Something is up with your passwords. Try again!'),
+        tos: Yup.bool().oneOf([true], 'Not so fast!')
+    }),
+    handleSubmit(values, { setStatus }) {
+        // post data
+        axios.post('https://reqres.in/api/users', values)
+            .then(res => {
+                setStatus(res.data)
+            })
+            .catch(err => console.log(`Error: ${err.response}`));
+    }
+})(UserForm)
